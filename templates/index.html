@@ -16,7 +16,7 @@
         <div class="cards-container">
             {{range .}}
             <div class="card">
-                <a id="anchor" href="http://localhost:8080/artists/{{.Id}}">
+                <a id="anchor" href="http://localhost:8080/artist?id={{.Id}}">
                 <img src="{{.Image}}" alt="{{.Name}}Image">
                 <div class="card-title">
                    <h3 id="anchor">{{.Name}}</h3>

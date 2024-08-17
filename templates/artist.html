@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Hub</title>
+    <link rel="stylesheet" href="static/artist.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo-container">
+            <img class="logo" src="static/Logo.png" alt="Logo">
+        </div>
+    </header>
+    <main>
+        <div class="artist-container">
+            <div class="artist-image">
+                <img src="{{.Image}}" alt="Artist Image">
+            </div>
+            <div class="artist-data">
+                <h1 id="artist-name">{{.Name}}</h1>
+                <div class="split-container">
+                    <div class="info-section left-side">
+                        <div class="artist-members">
+                            <div class="title">
+                                <h2>Members</h2>
+                            </div>
+                            <ul>
+                                {{range .Members}}
+                                <li>{{.}}</li>
+                                {{end}}
+                            </ul>
+                        </div>
+                        <div class="creation-date">
+                            <div class="title">
+                                <h2>Creation Date</h2>
+                            </div>
+                            <p>{{.CreationDate}}</p>
+                        </div>
+                    </div>
+                    <div class="info-section right-side">
+                        <div class="first-album">
+                            <div class="title">
+                                <h2>First Album</h2>
+                            </div>
+                            <p>{{.FirstAlbum}}</p>
+                        </div>
+                        <div class="locations">
+                            <div class="title">
+                                <h2>Tour Locations & Dates</h2>
+                            </div>
+                            {{range $key, $value := .LocationsAndDates}}
+                            <div class="location">
+                                <h3>{{$key}}</h3>
+                                <ul>
+                                    {{range $value}}
+                                    <li>{{.}}</li>
+                                    {{end}}
+                                </ul>
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>Music Hub</p>
+    </footer>
+</body>
+
+</html>

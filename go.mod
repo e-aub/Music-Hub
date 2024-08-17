@@ -1,3 +1,3 @@
-module groupie_tracker
+module musicHub
 
-go 1.22.3
+go 1.21.12
