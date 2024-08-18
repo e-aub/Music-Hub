@@ -4,9 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"html/template"
-	"io/ioutil"
+	"io"
 	"net/http"
-	"regexp"
 	"sync"
 )
 
@@ -43,11 +42,10 @@ type (
 )
 
 var (
-	indexRegex = regexp.MustCompile(`^\{\"index\":(.*)}`)
-	Data       bytes.Buffer
-	Relations  []Relation
-	Templates  *template.Template
-	Url        = map[string]string{
+	Data      bytes.Buffer
+	Relations []Relation
+	Templates *template.Template
+	Url       = map[string]string{
 		"artists":   "https://groupietrackers.herokuapp.com/api/artists",
 		"locations": "https://groupietrackers.herokuapp.com/api/locations",
 		"dates":     "https://groupietrackers.herokuapp.com/api/dates",
@@ -61,13 +59,10 @@ func Fetch(url string, typ any, wg *sync.WaitGroup, mu *sync.Mutex, errchan chan
 		errchan <- err
 		return
 	}
-	Data, err := ioutil.ReadAll(response.Body)
+	Data, err := io.ReadAll(response.Body)
 	if err != nil {
 		errchan <- err
 		return
-	}
-	if match := indexRegex.FindAllSubmatch(Data, -1); match != nil {
-		Data = match[0][1]
 	}
 	mu.Lock()
 	err = json.Unmarshal(Data, typ)
@@ -77,4 +72,13 @@ func Fetch(url string, typ any, wg *sync.WaitGroup, mu *sync.Mutex, errchan chan
 		return
 	}
 	defer wg.Done()
+}
+
+func IsId(id string) bool {
+	for _, digit := range id {
+		if digit < '0' || digit > '9' {
+			return false
+		}
+	}
+	return true
 }

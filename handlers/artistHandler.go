@@ -9,17 +9,21 @@ import (
 )
 
 func Artist(w http.ResponseWriter, r *http.Request) {
-	start := time.Now()
-	defer func(start time.Time) {
-		fmt.Println(time.Since(start))
-	}(start)
-	fmt.Println(r.URL.Path)
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 	id := r.FormValue("id")
-	fmt.Println(id)
+	if !utils.IsId(id) {
+		http.Error(w, "not found", http.StatusNotFound)
+		return
 
-	var artist utils.Artist
-	var wg sync.WaitGroup
-	var mu sync.Mutex
+	}
+	var (
+		artist utils.Artist
+		wg     sync.WaitGroup
+		mu     sync.Mutex
+	)
 	errChan := make(chan error, len(utils.Url))
 	for index, url := range utils.Url {
 		wg.Add(1)
@@ -41,7 +45,6 @@ func Artist(w http.ResponseWriter, r *http.Request) {
 		close(errChan)
 
 	}()
-
 	select {
 	case err := <-errChan:
 		if err != nil {
@@ -54,7 +57,5 @@ func Artist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(artist)
-
-	// utils.Templates.ExecuteTemplate(w, "artist.html", artist)
+	utils.Templates.ExecuteTemplate(w, "artist.html", artist)
 }

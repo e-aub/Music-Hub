@@ -39,6 +39,22 @@
                             </div>
                             <p>{{.CreationDate}}</p>
                         </div>
+                        <div class="dates">
+                            <div class="title">
+                                <h2>Dates</h2>
+                            </div>
+                                {{range .Dates.Dates}}
+                                <p>{{.}}</p>
+                                {{end}}
+                        </div>
+                        <div class="locations">
+                            <div class="title">
+                                <h2>Locations</h2>
+                            </div>
+                                {{range .Locations.Locations}}
+                                <p>{{.}}</p>
+                                {{end}}
+                        </div>
                     </div>
                     <div class="info-section right-side">
                         <div class="first-album">
@@ -47,7 +63,7 @@
                             </div>
                             <p>{{.FirstAlbum}}</p>
                         </div>
-                        <div class="locations">
+                        <div class="relation">
                             <div class="title">
                                 <h2>Tour Locations & Dates</h2>
                             </div>

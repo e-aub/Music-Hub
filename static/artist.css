@@ -119,7 +119,7 @@ main {
     margin: 0;
 }
 
-.artist-members li, .locations li {
+.artist-members li, .locations p, .dates p, .relation li, .creation-date p {
     color: var(--lightgray);
     margin: 0.5em 0;
     padding: 5px 10px;
