@@ -3,7 +3,6 @@ package utils
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -56,14 +55,16 @@ var (
 	}
 )
 
-func Fetch(url string, typ any, wg *sync.WaitGroup, mu *sync.Mutex) {
+func Fetch(url string, typ any, wg *sync.WaitGroup, mu *sync.Mutex, errchan chan error) {
 	response, err := http.Get(url)
 	if err != nil {
-		fmt.Println(err)
+		errchan <- err
+		return
 	}
 	Data, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println(err)
+		errchan <- err
+		return
 	}
 	if match := indexRegex.FindAllSubmatch(Data, -1); match != nil {
 		Data = match[0][1]
@@ -72,7 +73,8 @@ func Fetch(url string, typ any, wg *sync.WaitGroup, mu *sync.Mutex) {
 	err = json.Unmarshal(Data, typ)
 	mu.Unlock()
 	if err != nil {
-		fmt.Println(err)
+		errchan <- err
+		return
 	}
 	defer wg.Done()
 }
